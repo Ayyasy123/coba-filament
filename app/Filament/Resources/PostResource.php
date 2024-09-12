@@ -17,10 +17,13 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Columns\ColorColumn;
@@ -40,53 +43,66 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Create a Post')
-                    ->description('create a posts over here')
-                    // ->aside()
-                    ->collapsible()
-                    ->schema([
+                Tabs::make('create New Post')->tabs([
+                    Tab::make('Tab 1')
+                        ->icon('heroicon-m-inbox')
+                        ->iconPosition(IconPosition::After)
+                        ->badge('Hi')
+                        ->schema([
+                            TextInput::make('title')
+                                // ->rules(['min:3', 'max:10'])
+                                ->minLength(3)
+                                ->maxLength(10)
+                                // ->in(['test', 'hello'])
+                                ->required(),
+                            TextInput::make('slug')->unique(ignoreRecord: true)->required(),
 
-                        TextInput::make('title')
-                            // ->rules(['min:3', 'max:10'])
-                            ->minLength(3)
-                            ->maxLength(10)
-                            // ->in(['test', 'hello'])
-                            ->required(),
-                        TextInput::make('slug')->unique(ignoreRecord: true)->required(),
-
-                        Select::make('category_id')
-                            ->label('Category')
-                            ->relationship('category', 'name')
-                            ->searchable()
-                            ->required(),
-                        ColorPicker::make('color')->required(),
+                            Select::make('category_id')
+                                ->label('Category')
+                                ->relationship('category', 'name')
+                                ->searchable()
+                                ->required(),
+                            ColorPicker::make('color')->required(),
+                        ]),
+                    Tab::make('Content')->schema([
                         MarkdownEditor::make('content')->required()->columnSpanFull(),
-                    ])->columnSpan(2)->columns(2),
-
-                Group::make()
-                    ->schema([
-                        Section::make('Image')
-                            ->collapsible()
-                            ->schema([
-                                FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
-                            ])->columnSpan(1),
-                        Section::make('Meta')
-                            ->schema([
-                                TagsInput::make('tags')->required(),
-                                Checkbox::make('published'),
-                            ]),
-                        // Section::make('Authors')
-                        //     ->schema([
-                        //         // Select::make('authors')
-                        //         //     ->multiple()
-                        //         //     ->relationship('authors', 'name')
-                        //         CheckboxList::make('authors')
-                        //             ->label('Co Authors')
-                        //             // ->multiple()
-                        //             ->searchable()
-                        //             ->relationship('authors', 'name')
-                        //     ])
                     ]),
+                    Tab::make('Meta')->schema([
+                        FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
+                        TagsInput::make('tags')->required(),
+                        Checkbox::make('published'),
+                    ]),
+                ])->activeTab(2)->persistTabInQueryString(),
+                // Section::make('Create a Post')
+                //     ->description('create a posts over here')
+                //     // ->aside()
+                //     ->collapsible()
+                //     ->schema([])->columnSpan(2)->columns(2),
+
+                // Group::make()
+                //     ->schema([
+                //         Section::make('Image')
+                //             ->collapsible()
+                //             ->schema([
+                //
+                //             ])->columnSpan(1),
+                //         Section::make('Meta')
+                //             ->schema([
+                //                 TagsInput::make('tags')->required(),
+                //                 Checkbox::make('published'),
+                //             ]),
+                //         // Section::make('Authors')
+                //         //     ->schema([
+                //         //         // Select::make('authors')
+                //         //         //     ->multiple()
+                //         //         //     ->relationship('authors', 'name')
+                //         //         CheckboxList::make('authors')
+                //         //             ->label('Co Authors')
+                //         //             // ->multiple()
+                //         //             ->searchable()
+                //         //             ->relationship('authors', 'name')
+                //         //     ])
+                //     ]),
             ])->columns(3);
     }
 
