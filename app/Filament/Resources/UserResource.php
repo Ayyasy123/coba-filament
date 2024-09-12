@@ -28,7 +28,7 @@ class UserResource extends Resource
             ->schema([
                 TextInput::make('name')->required(),
                 TextInput::make('email')->email(),
-                TextInput::make('password')->password()->readOnlyOn('edit'),
+                TextInput::make('password')->password(),
                 // Select::make('role')->options([
                 //     "Admin" => "Admin",
                 //     "Pembimbing" => "Pembimbing",
