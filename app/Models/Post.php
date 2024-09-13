@@ -33,4 +33,9 @@ class Post extends Model
     {
         return $this->belongsToMany(User::class, 'post_users')->withPivot(['order'])->withTimestamps();
     }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 }
