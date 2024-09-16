@@ -23,6 +23,8 @@ class CategoryResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-folder';
     protected static ?string $modelLabel = 'Post Categories';
 
+    protected static bool $shouldSkipAuthorization = true;
+
     public static function form(Form $form): Form
     {
         return $form
