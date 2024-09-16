@@ -28,7 +28,9 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationGroup = 'Blog';
 
-    protected static ?int $navigationSort = 2;
+    // protected static ?int $navigationSort = 2;
+
+    protected static ?string $navigationParentItem = 'Posts';
 
     protected static bool $shouldSkipAuthorization = true;
 
