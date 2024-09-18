@@ -4,11 +4,15 @@ namespace App\Filament\Widgets;
 
 use App\Models\User;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
+use Illuminate\Support\Carbon as SupportCarbon;
 
 class TestChartWidget extends ChartWidget
 {
+
+    use InteractsWithPageFilters;
     protected static ?string $heading = 'Test Chart';
 
     protected int | string | array $columnSpan = 1;
@@ -16,10 +20,13 @@ class TestChartWidget extends ChartWidget
     protected function getData(): array
     {
 
+        $startDate = $this->filters['startDate'];
+        $endDate = $this->filters['endDate'];
+
         $data = Trend::model(User::class)
             ->between(
-                start: now()->subMonth(),
-                end: now(),
+                start: $startDate ? SupportCarbon::parse($startDate) : now()->subMonth(),
+                end: $endDate ? SupportCarbon::parse($endDate) : now(),
             )
             ->perMonth()
             ->count();
